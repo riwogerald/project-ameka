@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/game_manager.dart';
+import '../services/timer_manager.dart';
+import '../services/economy_manager.dart';
 import '../models/game_data.dart';
 import 'content_button.dart';
 
@@ -56,12 +58,27 @@ class ContentCreationPanel extends StatelessWidget {
                       size: 24,
                     ),
                     SizedBox(width: 12),
-                    Text(
-                      'Create Content for ${currentPlatform.name}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.purple.shade700,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Create Content for ${currentPlatform.name}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple.shade700,
+                            ),
+                          ),
+                          Text(
+                            EconomyManager.instance.getInfluencerTier(gameManager.currentInfluencer.followers),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.purple.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -74,7 +91,7 @@ class ContentCreationPanel extends StatelessWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 1.1,
+                    childAspectRatio: 1.0,
                   ),
                   itemCount: currentPlatform.availableContent.length,
                   itemBuilder: (context, index) {
@@ -151,24 +168,14 @@ class ContentCreationPanel extends StatelessWidget {
       return;
     }
     
-    // For now, just simulate instant completion
-    // In Phase 3, we'll add the timer system
-    _simulateContentCreation(context, content, gameManager);
-  }
-  
-  void _simulateContentCreation(BuildContext context, ContentType content, GameManager gameManager) {
-    // Consume energy
-    gameManager.consumeEnergy(content.energyCost);
+    // Start the timer
+    final timerId = TimerManager.instance.startContentTimer(content, gameManager);
     
-    // Add rewards (simplified for now)
-    gameManager.addFollowers(content.baseFollowerGain);
-    gameManager.addMoney(content.baseMoneyGain);
-    
-    // Show success message
+    // Show confirmation
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${content.name} created! +${content.baseFollowerGain} followers, +\$${content.baseMoneyGain}'),
-        backgroundColor: Colors.green,
+        content: Text('Started creating ${content.name}! Check the timer below.'),
+        backgroundColor: Colors.purple,
         duration: Duration(seconds: 2),
       ),
     );
@@ -196,17 +203,26 @@ class ContentCreationPanel extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Show rewarded ad for energy in Phase 3
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Ad system coming in Phase 3!'),
-                  backgroundColor: Colors.blue,
-                ),
-              );
+              _restoreEnergyWithAd(context);
             },
             child: Text('Watch Ad'),
           ),
         ],
+      ),
+    );
+  }
+  
+  void _restoreEnergyWithAd(BuildContext context) {
+    final gameManager = Provider.of<GameManager>(context, listen: false);
+    
+    // Simulate watching an ad and restore energy
+    gameManager.restoreEnergy(50); // Restore 50 energy
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Energy restored! +50 energy'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
       ),
     );
   }
