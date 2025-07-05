@@ -6,6 +6,9 @@ import '../widgets/top_bar.dart';
 import '../widgets/platform_tabs.dart';
 import '../widgets/content_creation_panel.dart';
 import '../widgets/active_timers_panel.dart';
+import '../widgets/banner_ad_widget.dart';
+import '../screens/shop_screen.dart';
+import '../screens/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -30,14 +33,20 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: [
           IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ShopScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              // TODO: Add settings screen in Phase 4
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Settings coming in Phase 4!'),
-                  backgroundColor: Colors.blue,
-                ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
               );
             },
           ),
@@ -87,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ActiveTimersPanel(),
+                BannerAdWidget(),
               ],
             );
           },

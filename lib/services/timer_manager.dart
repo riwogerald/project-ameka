@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 import '../models/game_data.dart';
+import '../services/economy_manager.dart';
 import 'game_manager.dart';
 
 class ActiveTimer {
@@ -49,7 +50,6 @@ class TimerManager extends ChangeNotifier {
   
   List<ActiveTimer> _activeTimers = [];
   Timer? _updateTimer;
-  Timer? _energyTimer;
   
   List<ActiveTimer> get activeTimers => _activeTimers;
   bool get hasActiveTimers => _activeTimers.isNotEmpty;
@@ -59,16 +59,10 @@ class TimerManager extends ChangeNotifier {
     _updateTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       _updateTimers();
     });
-    
-    // Start energy regeneration timer (every 5 minutes)
-    _energyTimer = Timer.periodic(Duration(minutes: 5), (timer) {
-      _regenerateEnergy();
-    });
   }
   
   void dispose() {
     _updateTimer?.cancel();
-    _energyTimer?.cancel();
     super.dispose();
   }
   
@@ -76,13 +70,16 @@ class TimerManager extends ChangeNotifier {
     // Generate unique ID for this timer
     final String timerId = DateTime.now().millisecondsSinceEpoch.toString();
     
+    // Calculate duration with shop speed boosts
+    final int duration = EconomyManager.instance.calculateContentDuration(content);
+    
     // Create new timer
     final timer = ActiveTimer(
       id: timerId,
       contentType: content,
       startTime: DateTime.now(),
-      totalDuration: content.baseTime * 60, // Convert minutes to seconds
-      remainingTime: content.baseTime * 60,
+      totalDuration: duration,
+      remainingTime: duration,
     );
     
     _activeTimers.add(timer);
@@ -127,11 +124,6 @@ class TimerManager extends ChangeNotifier {
     // This will be called when a timer completes
     // The UI will listen for this and show rewards
     debugPrint('Timer completed: ${timer.contentType.name}');
-  }
-  
-  void _regenerateEnergy() {
-    // This will be handled by GameManager
-    debugPrint('Energy regeneration tick');
   }
   
   void skipTimer(String timerId, GameManager gameManager) {

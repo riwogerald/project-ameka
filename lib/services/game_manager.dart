@@ -3,6 +3,7 @@ import 'dart:async';
 import '../models/game_data.dart';
 import '../services/timer_manager.dart';
 import '../services/economy_manager.dart';
+import '../services/audio_manager.dart';
 import 'save_system.dart';
 
 class GameManager extends ChangeNotifier {
@@ -39,6 +40,7 @@ class GameManager extends ChangeNotifier {
     
     for (var timer in completedTimers) {
       EconomyManager.instance.completeContent(timer.contentType, this);
+      AudioManager.instance.playSound(SoundEffect.contentComplete);
     }
   }
   
@@ -56,7 +58,7 @@ class GameManager extends ChangeNotifier {
   }
   
   void _startEnergyRegeneration() {
-    _energyRegenTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    _energyRegenTimer = Timer.periodic(Duration(seconds: 30), (timer) {
       regenerateEnergy();
     });
   }
@@ -78,11 +80,13 @@ class GameManager extends ChangeNotifier {
   void addFollowers(int amount) {
     _currentInfluencer.followers += amount;
     _checkPlatformUnlocks();
+    AudioManager.instance.playSound(SoundEffect.levelUp);
     notifyListeners();
   }
   
   void addMoney(int amount) {
     _currentInfluencer.money += amount;
+    AudioManager.instance.playSound(SoundEffect.moneyEarn);
     notifyListeners();
   }
   
@@ -104,6 +108,12 @@ class GameManager extends ChangeNotifier {
     _currentInfluencer.energy = 
         (_currentInfluencer.energy + amount).clamp(0, _currentInfluencer.maxEnergy);
     notifyListeners();
+  }
+  
+  void increaseMaxEnergy(int amount) {
+    _currentInfluencer.maxEnergy += amount;
+    notifyListeners();
+    saveGame();
   }
   
   void _checkPlatformUnlocks() {

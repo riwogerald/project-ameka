@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/game_data.dart';
+import '../services/shop_manager.dart';
 import 'game_manager.dart';
 
 class EconomyManager {
@@ -14,6 +15,10 @@ class EconomyManager {
     // Calculate rewards based on followers and content type
     int followerGain = calculateFollowerGain(content, influencer.followers);
     int moneyGain = calculateMoneyGain(content, influencer.followers);
+    
+    // Apply shop multipliers
+    followerGain = (followerGain * ShopManager.instance.getFollowerMultiplier()).round();
+    moneyGain = (moneyGain * ShopManager.instance.getMoneyMultiplier()).round();
     
     // Add rewards
     gameManager.addFollowers(followerGain);
@@ -43,6 +48,12 @@ class EconomyManager {
     
     int gain = (content.baseMoneyGain * followerMultiplier * randomFactor).round();
     return gain.clamp(1, content.baseMoneyGain * 5); // Cap at 5x base
+  }
+  
+  int calculateContentDuration(ContentType content) {
+    // Apply speed multipliers from shop items
+    double speedMultiplier = ShopManager.instance.getSpeedMultiplier();
+    return (content.baseTime * 60 * speedMultiplier).round(); // Convert to seconds
   }
   
   bool canAfford(int cost, int currentMoney) {

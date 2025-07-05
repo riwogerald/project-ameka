@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/timer_manager.dart';
 import '../services/game_manager.dart';
+import '../services/ad_manager.dart';
+import '../services/audio_manager.dart';
 
 class TimerUI extends StatelessWidget {
   final ActiveTimer timer;
@@ -198,22 +200,38 @@ class TimerUI extends StatelessWidget {
   void _skipWithAd(BuildContext context) {
     final gameManager = Provider.of<GameManager>(context, listen: false);
     
-    // Skip the timer
-    TimerManager.instance.skipTimer(timer.id, gameManager);
-    
-    // Add rewards
-    gameManager.addFollowers(timer.contentType.baseFollowerGain);
-    gameManager.addMoney(timer.contentType.baseMoneyGain);
-    
-    // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${timer.contentType.name} completed! +${timer.contentType.baseFollowerGain} followers, +\$${timer.contentType.baseMoneyGain}',
-        ),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
-      ),
+    AdManager.instance.showRewardedAd(
+      onRewarded: () {
+        // Skip the timer
+        TimerManager.instance.skipTimer(timer.id, gameManager);
+        
+        // Add rewards
+        gameManager.addFollowers(timer.contentType.baseFollowerGain);
+        gameManager.addMoney(timer.contentType.baseMoneyGain);
+        
+        // Play success sound
+        AudioManager.instance.playSound(SoundEffect.contentComplete);
+        
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${timer.contentType.name} completed! +${timer.contentType.baseFollowerGain} followers, +\$${timer.contentType.baseMoneyGain}',
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
+      onFailed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ad not available. Try again later.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../services/game_manager.dart';
 import '../services/timer_manager.dart';
 import '../services/economy_manager.dart';
+import '../services/ad_manager.dart';
+import '../services/audio_manager.dart';
 import '../models/game_data.dart';
 import 'content_button.dart';
 
@@ -162,22 +164,30 @@ class ContentCreationPanel extends StatelessWidget {
   }
   
   void _startContentCreation(BuildContext context, ContentType content, GameManager gameManager) {
+    // Play button click sound
+    AudioManager.instance.playSound(SoundEffect.buttonClick);
+    
     // Check if user has enough energy
     if (!gameManager.canCreateContent(content)) {
       _showNotEnoughEnergyDialog(context);
       return;
     }
     
-    // Start the timer
-    final timerId = TimerManager.instance.startContentTimer(content, gameManager);
-    
-    // Show confirmation
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Started creating ${content.name}! Check the timer below.'),
-        backgroundColor: Colors.purple,
-        duration: Duration(seconds: 2),
-      ),
+    // Show interstitial ad before starting content (occasionally)
+    AdManager.instance.showInterstitialAd(
+      onComplete: () {
+        // Start the timer
+        final timerId = TimerManager.instance.startContentTimer(content, gameManager);
+        
+        // Show confirmation
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Started creating ${content.name}! Check the timer below.'),
+            backgroundColor: Colors.purple,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
     );
   }
   
@@ -215,15 +225,27 @@ class ContentCreationPanel extends StatelessWidget {
   void _restoreEnergyWithAd(BuildContext context) {
     final gameManager = Provider.of<GameManager>(context, listen: false);
     
-    // Simulate watching an ad and restore energy
-    gameManager.restoreEnergy(50); // Restore 50 energy
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Energy restored! +50 energy'),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
-      ),
+    AdManager.instance.showRewardedAd(
+      onRewarded: () {
+        gameManager.restoreEnergy(50); // Restore 50 energy
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Energy restored! +50 energy'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
+      onFailed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ad not available. Try again later.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
     );
   }
 }
