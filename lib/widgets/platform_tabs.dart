@@ -96,11 +96,11 @@ class PlatformTabs extends StatelessWidget {
   
   IconData _getPlatformIcon(String platformName) {
     switch (platformName.toLowerCase()) {
-      case 'tiktok':
+      case 'tippot':
         return Icons.music_note;
-      case 'instagram':
+      case 'thegram':
         return Icons.camera_alt;
-      case 'youtube':
+      case 'yutub':
         return Icons.play_circle_filled;
       default:
         return Icons.public;

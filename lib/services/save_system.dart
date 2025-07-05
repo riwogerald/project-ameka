@@ -42,30 +42,30 @@ class SaveSystem {
   static List<Platform> _getDefaultPlatforms() {
     return [
       Platform(
-        name: "TikTok",
-        logoPath: "assets/images/tiktok_logo.png",
-        availableContent: _getTikTokContent(),
+        name: "TipPot",
+        logoPath: "assets/images/tippot_logo.png",
+        availableContent: _getTipPotContent(),
         isUnlocked: true,
         unlockFollowerRequirement: 0,
       ),
       Platform(
-        name: "Instagram",
-        logoPath: "assets/images/instagram_logo.png",
-        availableContent: _getInstagramContent(),
+        name: "TheGram",
+        logoPath: "assets/images/thegram_logo.png",
+        availableContent: _getTheGramContent(),
         isUnlocked: false,
         unlockFollowerRequirement: 1000,
       ),
       Platform(
-        name: "YouTube",
-        logoPath: "assets/images/youtube_logo.png",
-        availableContent: _getYouTubeContent(),
+        name: "Yutub",
+        logoPath: "assets/images/yutub_logo.png",
+        availableContent: _getYutubContent(),
         isUnlocked: false,
         unlockFollowerRequirement: 5000,
       ),
     ];
   }
   
-  static List<ContentType> _getTikTokContent() {
+  static List<ContentType> _getTipPotContent() {
     return [
       ContentType(
         name: "Dance Video",
@@ -94,7 +94,7 @@ class SaveSystem {
     ];
   }
   
-  static List<ContentType> _getInstagramContent() {
+  static List<ContentType> _getTheGramContent() {
     return [
       ContentType(
         name: "Story Post",
@@ -123,7 +123,7 @@ class SaveSystem {
     ];
   }
   
-  static List<ContentType> _getYouTubeContent() {
+  static List<ContentType> _getYutubContent() {
     return [
       ContentType(
         name: "Short Video",
