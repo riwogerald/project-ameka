@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/game_data.dart';
 import '../services/shop_manager.dart';
 import '../services/upgrade_manager.dart';
+import '../services/equipment_manager.dart';
 import 'game_manager.dart';
 
 class EconomyManager {
@@ -24,6 +25,14 @@ class EconomyManager {
     // Apply platform-specific upgrade multipliers
     followerGain = (followerGain * UpgradeManager.instance.getFollowerMultiplier(platformId)).round();
     moneyGain = (moneyGain * UpgradeManager.instance.getMoneyMultiplier(platformId)).round();
+    
+    // Apply equipment bonuses
+    followerGain = (followerGain * EquipmentManager.instance.getPlatformBonus(platformId, 'followers')).round();
+    moneyGain = (moneyGain * EquipmentManager.instance.getPlatformBonus(platformId, 'money')).round();
+    
+    // Apply global equipment bonuses
+    followerGain = (followerGain * EquipmentManager.instance.getGlobalBonus('content_quality')).round();
+    moneyGain = (moneyGain * EquipmentManager.instance.getGlobalBonus('viral_chance')).round();
     
     // Add rewards
     gameManager.addFollowers(followerGain);
@@ -56,9 +65,10 @@ class EconomyManager {
   }
   
   int calculateContentDuration(ContentType content, String platformId) {
-    // Apply speed multipliers from shop items and platform upgrades
+    // Apply speed multipliers from shop items, platform upgrades, and equipment
     double speedMultiplier = ShopManager.instance.getSpeedMultiplier();
     speedMultiplier *= UpgradeManager.instance.getSpeedMultiplier(platformId);
+    speedMultiplier *= EquipmentManager.instance.getGlobalBonus('creation_speed');
     
     return (content.baseTime * 60 * speedMultiplier).round(); // Convert to seconds
   }
