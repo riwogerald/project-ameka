@@ -39,7 +39,7 @@ class GameManager extends ChangeNotifier {
         .toList();
     
     for (var timer in completedTimers) {
-      EconomyManager.instance.completeContent(timer.contentType, this);
+      EconomyManager.instance.completeContent(timer.contentType, this, timer.platformId);
       AudioManager.instance.playSound(SoundEffect.contentComplete);
     }
   }

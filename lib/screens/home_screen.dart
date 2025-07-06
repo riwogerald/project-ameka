@@ -8,6 +8,7 @@ import '../widgets/content_creation_panel.dart';
 import '../widgets/active_timers_panel.dart';
 import '../widgets/banner_ad_widget.dart';
 import '../screens/shop_screen.dart';
+import '../screens/upgrade_screen.dart';
 import '../screens/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Influencer Academy'),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: Icon(Icons.upgrade),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UpgradeScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {

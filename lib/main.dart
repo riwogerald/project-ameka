@@ -4,6 +4,7 @@ import 'services/game_manager.dart';
 import 'services/ad_manager.dart';
 import 'services/shop_manager.dart';
 import 'services/audio_manager.dart';
+import 'services/upgrade_manager.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
@@ -13,6 +14,7 @@ void main() async {
   await AdManager.instance.initialize();
   await ShopManager.instance.initialize();
   await AudioManager.instance.initialize();
+  await UpgradeManager.instance.initialize();
   
   runApp(InfluencerAcademy());
 }
@@ -25,6 +27,7 @@ class InfluencerAcademy extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GameManager()),
         ChangeNotifierProvider.value(value: AdManager.instance),
         ChangeNotifierProvider.value(value: ShopManager.instance),
+        ChangeNotifierProvider.value(value: UpgradeManager.instance),
       ],
       child: MaterialApp(
         title: 'Influencer Academy',
