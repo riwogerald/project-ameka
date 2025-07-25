@@ -6,17 +6,14 @@ import 'services/shop_manager.dart';
 import 'services/audio_manager.dart';
 import 'services/upgrade_manager.dart';
 import 'services/equipment_manager.dart';
-import 'screens/home_screen.dart';
+import 'services/splash_service.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize services
-  await AdManager.instance.initialize();
-  await ShopManager.instance.initialize();
-  await AudioManager.instance.initialize();
-  await UpgradeManager.instance.initialize();
-  await EquipmentManager.instance.initialize();
+  // Basic Flutter initialization only
+  // Services will be initialized by SplashService during splash screen
   
   runApp(InfluencerAcademy());
 }
@@ -31,6 +28,7 @@ class InfluencerAcademy extends StatelessWidget {
         ChangeNotifierProvider.value(value: ShopManager.instance),
         ChangeNotifierProvider.value(value: UpgradeManager.instance),
         ChangeNotifierProvider.value(value: EquipmentManager.instance),
+        ChangeNotifierProvider.value(value: SplashService.instance),
       ],
       child: MaterialApp(
         title: 'Influencer Academy',
@@ -61,7 +59,7 @@ class InfluencerAcademy extends StatelessWidget {
             ),
           ),
         ),
-        home: HomeScreen(),
+        home: SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
