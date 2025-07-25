@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Circle background -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M60,60m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0" />
+    
+    <!-- Star icon -->
+    <path
+        android:fillColor="@color/purple_primary"
+        android:pathData="M60,25L67.5,50L95,50L73.75,67.5L81.25,92.5L60,75L38.75,92.5L46.25,67.5L25,50L52.5,50Z" />
+    
+    <!-- Inner highlight -->
+    <path
+        android:fillColor="@color/purple_light"
+        android:pathData="M60,35L65,52L80,52L68,62L73,79L60,70L47,79L52,62L40,52L55,52Z" />
+</vector>
