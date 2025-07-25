@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App name -->
+    <string name="app_name">Influencer Academy</string>
+    <string name="app_name_short">InfluencerAcademy</string>
+    
+    <!-- App description -->
+    <string name="app_description">Build your social media empire and become the ultimate influencer</string>
+    
+    <!-- Launch screen -->
+    <string name="launch_text">Building Your Social Empire...</string>
+    
+    <!-- Permissions -->
+    <string name="internet_permission_rationale">Internet access is required for ads and game features</string>
+    
+    <!-- Error messages -->
+    <string name="error_network">Network connection required</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_ad_load">Failed to load advertisement</string>
+    
+    <!-- Buttons -->
+    <string name="btn_retry">Retry</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_share">Share</string>
+    <string name="btn_rate">Rate App</string>
+    
+    <!-- Notifications -->
+    <string name="notification_channel_name">Game Notifications</string>
+    <string name="notification_channel_description">Notifications for game events and updates</string>
+    <string name="notification_energy_restored">Your energy has been restored!</string>
+    <string name="notification_content_ready">Your content is ready!</string>
+    
+    <!-- Share content -->
+    <string name="share_app_text">Check out Influencer Academy - Build your social media empire! Download now: https://play.google.com/store/apps/details?id=com.influenceracademy.app</string>
+    <string name="share_achievement">I just reached %1$d followers in Influencer Academy! Can you beat my score?</string>
+    
+    <!-- Achievement unlocked -->
+    <string name="achievement_unlocked">Achievement Unlocked!</string>
+    <string name="platform_unlocked">New platform unlocked: %1$s</string>
+    
+    <!-- Game content -->
+    <string name="followers_format">%1$s followers</string>
+    <string name="money_format">$%1$s</string>
+    <string name="energy_format">%1$d/%2$d</string>
+    
+    <!-- Time formats -->
+    <string name="time_seconds">%1$ds</string>
+    <string name="time_minutes">%1$dm</string>
+    <string name="time_hours">%1$dh</string>
+    <string name="time_format_full">%1$dh %2$dm %3$ds</string>
+    
+    <!-- AdMob -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_rewarded_id">ca-app-pub-3940256099942544/5224354917</string>
+    
+    <!-- Privacy -->
+    <string name="privacy_policy_url">https://influenceracademy.app/privacy</string>
+    <string name="terms_of_service_url">https://influenceracademy.app/terms</string>
+</resources>
