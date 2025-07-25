@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="@color/purple_primary"
+        android:pathData="M0,0h108v108h-108z" />
+    
+    <!-- Main icon - Star -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M54,20L62,45L90,45L68,62L76,87L54,70L32,87L40,62L18,45L46,45Z" />
+    
+    <!-- Inner highlight -->
+    <path
+        android:fillColor="@color/purple_light"
+        android:pathData="M54,28L59,46L75,46L63,56L68,74L54,64L40,74L45,56L33,46L49,46Z" />
+</vector>
