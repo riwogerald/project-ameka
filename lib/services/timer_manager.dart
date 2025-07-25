@@ -7,6 +7,7 @@ import 'game_manager.dart';
 class ActiveTimer {
   final String id;
   final ContentType contentType;
+  final String platformId;
   final DateTime startTime;
   final int totalDuration; // in seconds
   int remainingTime; // in seconds
@@ -15,6 +16,7 @@ class ActiveTimer {
   ActiveTimer({
     required this.id,
     required this.contentType,
+    required this.platformId,
     required this.startTime,
     required this.totalDuration,
     required this.remainingTime,
@@ -26,6 +28,7 @@ class ActiveTimer {
   Map<String, dynamic> toJson() => {
     'id': id,
     'contentType': contentType.toJson(),
+    'platformId': platformId,
     'startTime': startTime.millisecondsSinceEpoch,
     'totalDuration': totalDuration,
     'remainingTime': remainingTime,
@@ -35,6 +38,7 @@ class ActiveTimer {
   factory ActiveTimer.fromJson(Map<String, dynamic> json) => ActiveTimer(
     id: json['id'] ?? '',
     contentType: ContentType.fromJson(json['contentType'] ?? {}),
+    platformId: json['platformId'] ?? '',
     startTime: DateTime.fromMillisecondsSinceEpoch(json['startTime'] ?? 0),
     totalDuration: json['totalDuration'] ?? 0,
     remainingTime: json['remainingTime'] ?? 0,
@@ -66,17 +70,18 @@ class TimerManager extends ChangeNotifier {
     super.dispose();
   }
   
-  String startContentTimer(ContentType content, GameManager gameManager) {
+  String startContentTimer(ContentType content, String platformId, GameManager gameManager) {
     // Generate unique ID for this timer
     final String timerId = DateTime.now().millisecondsSinceEpoch.toString();
     
-    // Calculate duration with shop speed boosts
-    final int duration = EconomyManager.instance.calculateContentDuration(content);
+    // Calculate duration with shop speed boosts and platform upgrades
+    final int duration = EconomyManager.instance.calculateContentDuration(content, platformId);
     
     // Create new timer
     final timer = ActiveTimer(
       id: timerId,
       contentType: content,
+      platformId: platformId,
       startTime: DateTime.now(),
       totalDuration: duration,
       remainingTime: duration,
@@ -123,7 +128,7 @@ class TimerManager extends ChangeNotifier {
   void _completeTimer(ActiveTimer timer) {
     // This will be called when a timer completes
     // The UI will listen for this and show rewards
-    debugPrint('Timer completed: ${timer.contentType.name}');
+    debugPrint('Timer completed: ${timer.contentType.name} on ${timer.platformId}');
   }
   
   void skipTimer(String timerId, GameManager gameManager) {
@@ -135,6 +140,10 @@ class TimerManager extends ChangeNotifier {
     timer.remainingTime = 0;
     timer.isActive = false;
     _completeTimer(timer);
+    
+    // Award rewards immediately
+    EconomyManager.instance.completeContent(timer.contentType, gameManager, timer.platformId);
+    
     _activeTimers.removeWhere((t) => t.id == timerId);
     
     notifyListeners();

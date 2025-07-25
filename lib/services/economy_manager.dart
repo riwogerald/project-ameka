@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import '../models/game_data.dart';
 import '../services/shop_manager.dart';
+import '../services/upgrade_manager.dart';
+import '../services/equipment_manager.dart';
 import 'game_manager.dart';
 
 class EconomyManager {
@@ -9,10 +11,10 @@ class EconomyManager {
   
   EconomyManager._();
   
-  void completeContent(ContentType content, GameManager gameManager) {
+  void completeContent(ContentType content, GameManager gameManager, String platformId) {
     final influencer = gameManager.currentInfluencer;
     
-    // Calculate rewards based on followers and content type
+    // Calculate base rewards
     int followerGain = calculateFollowerGain(content, influencer.followers);
     int moneyGain = calculateMoneyGain(content, influencer.followers);
     
@@ -20,11 +22,23 @@ class EconomyManager {
     followerGain = (followerGain * ShopManager.instance.getFollowerMultiplier()).round();
     moneyGain = (moneyGain * ShopManager.instance.getMoneyMultiplier()).round();
     
+    // Apply platform-specific upgrade multipliers
+    followerGain = (followerGain * UpgradeManager.instance.getFollowerMultiplier(platformId)).round();
+    moneyGain = (moneyGain * UpgradeManager.instance.getMoneyMultiplier(platformId)).round();
+    
+    // Apply equipment bonuses
+    followerGain = (followerGain * EquipmentManager.instance.getPlatformBonus(platformId, 'followers')).round();
+    moneyGain = (moneyGain * EquipmentManager.instance.getPlatformBonus(platformId, 'money')).round();
+    
+    // Apply global equipment bonuses
+    followerGain = (followerGain * EquipmentManager.instance.getGlobalBonus('content_quality')).round();
+    moneyGain = (moneyGain * EquipmentManager.instance.getGlobalBonus('viral_chance')).round();
+    
     // Add rewards
     gameManager.addFollowers(followerGain);
     gameManager.addMoney(moneyGain);
     
-    debugPrint('Content completed: ${content.name}');
+    debugPrint('Content completed: ${content.name} on $platformId');
     debugPrint('Rewards: +$followerGain followers, +\$$moneyGain money');
   }
   
@@ -50,9 +64,12 @@ class EconomyManager {
     return gain.clamp(1, content.baseMoneyGain * 5); // Cap at 5x base
   }
   
-  int calculateContentDuration(ContentType content) {
-    // Apply speed multipliers from shop items
+  int calculateContentDuration(ContentType content, String platformId) {
+    // Apply speed multipliers from shop items, platform upgrades, and equipment
     double speedMultiplier = ShopManager.instance.getSpeedMultiplier();
+    speedMultiplier *= UpgradeManager.instance.getSpeedMultiplier(platformId);
+    speedMultiplier *= EquipmentManager.instance.getGlobalBonus('creation_speed');
+    
     return (content.baseTime * 60 * speedMultiplier).round(); // Convert to seconds
   }
   
@@ -73,5 +90,37 @@ class EconomyManager {
     if (followers < 100000) return 'Mid-tier Influencer';
     if (followers < 1000000) return 'Macro Influencer';
     return 'Mega Influencer';
+  }
+  
+  Map<String, dynamic> getProgressionStats(GameManager gameManager) {
+    final influencer = gameManager.currentInfluencer;
+    final milestones = getFollowerMilestones();
+    
+    // Find next milestone
+    int nextMilestone = milestones.firstWhere(
+      (milestone) => milestone > influencer.followers,
+      orElse: () => milestones.last,
+    );
+    
+    // Calculate progress to next milestone
+    int previousMilestone = 0;
+    for (int milestone in milestones) {
+      if (milestone <= influencer.followers) {
+        previousMilestone = milestone;
+      } else {
+        break;
+      }
+    }
+    
+    double progress = previousMilestone == nextMilestone 
+        ? 1.0 
+        : (influencer.followers - previousMilestone) / (nextMilestone - previousMilestone);
+    
+    return {
+      'currentTier': getInfluencerTier(influencer.followers),
+      'nextMilestone': nextMilestone,
+      'progress': progress,
+      'followersToNext': nextMilestone - influencer.followers,
+    };
   }
 }

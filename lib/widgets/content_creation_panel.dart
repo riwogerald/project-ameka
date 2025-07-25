@@ -100,7 +100,7 @@ class ContentCreationPanel extends StatelessWidget {
                     final content = currentPlatform.availableContent[index];
                     return ContentButton(
                       contentType: content,
-                      onPressed: () => _startContentCreation(context, content, gameManager),
+                      onPressed: () => _startContentCreation(context, content, currentPlatform.name, gameManager),
                     );
                   },
                 ),
@@ -163,7 +163,7 @@ class ContentCreationPanel extends StatelessWidget {
     }
   }
   
-  void _startContentCreation(BuildContext context, ContentType content, GameManager gameManager) {
+  void _startContentCreation(BuildContext context, ContentType content, String platformName, GameManager gameManager) {
     // Play button click sound
     AudioManager.instance.playSound(SoundEffect.buttonClick);
     
@@ -176,8 +176,8 @@ class ContentCreationPanel extends StatelessWidget {
     // Show interstitial ad before starting content (occasionally)
     AdManager.instance.showInterstitialAd(
       onComplete: () {
-        // Start the timer
-        final timerId = TimerManager.instance.startContentTimer(content, gameManager);
+        // Start the timer with platform ID
+        final timerId = TimerManager.instance.startContentTimer(content, platformName, gameManager);
         
         // Show confirmation
         ScaffoldMessenger.of(context).showSnackBar(
