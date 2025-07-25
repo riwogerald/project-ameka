@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary app colors -->
+    <color name="purple_primary">#9C27B0</color>
+    <color name="purple_primary_variant">#7B1FA2</color>
+    <color name="purple_dark">#6A1B9A</color>
+    <color name="purple_light">#E1BEE7</color>
+    
+    <!-- Secondary colors -->
+    <color name="teal_primary">#009688</color>
+    <color name="teal_dark">#00695C</color>
+    <color name="teal_light">#B2DFDB</color>
+    
+    <!-- Common colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    
+    <!-- Background colors -->
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Platform colors -->
+    <color name="tiktok_color">#00F2EA</color>
+    <color name="instagram_color">#E4405F</color>
+    <color name="youtube_color">#FF0000</color>
+    
+    <!-- Status colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Game UI colors -->
+    <color name="energy_color">#FF9800</color>
+    <color name="money_color">#4CAF50</color>
+    <color name="followers_color">#2196F3</color>
+    
+    <!-- Splash screen colors -->
+    <color name="splash_background">#9C27B0</color>
+    <color name="splash_text">#FFFFFF</color>
+    
+    <!-- Button colors -->
+    <color name="button_primary">#9C27B0</color>
+    <color name="button_secondary">#E1BEE7</color>
+    <color name="button_disabled">#E0E0E0</color>
+    
+    <!-- Notification colors -->
+    <color name="notification_background">#9C27B0</color>
+    <color name="notification_accent">#7B1FA2</color>
+</resources>
